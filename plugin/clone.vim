@@ -108,4 +108,4 @@ endfunction
 command! -bar -range=% -nargs=1 -complete=file CloneAs call <SID>CloneAs(<q-args>, 0, <line1>, <line2>)
 command! -bar -range=% -nargs=1 -complete=file SplitAs call <SID>CloneAs(<q-args>, 1, <line1>, <line2>)
 
-" vim: set sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
+" vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
