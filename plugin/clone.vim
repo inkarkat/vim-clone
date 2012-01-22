@@ -9,6 +9,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	005	17-Nov-2011	Rename :SplitAs to :SCloneAs. 
 "	004	08-Nov-2011	file creation from ingocommands.vim. 
 "	001	01-Oct-2011	Initial implementation. 
 "				file creation
@@ -21,7 +22,7 @@ let g:loaded_clone = 1
 
 ":[range]CloneAs	Duplicate and edit the current buffer / specified lines
 "			with a new name, keep the existing one. 
-":[range]SplitAs	Duplicate and split the current buffer / specified lines
+":[range]SCloneAs	Duplicate and split the current buffer / specified lines
 "			with a new name, keep the existing one. 
 function! s:UpdateBuffer( isInBuffer, bufname, contents, filetype )
     if ! empty(a:bufname) && empty(a:contents)
@@ -104,8 +105,8 @@ function! s:CloneAs( filespec, isSplit, startLine, endLine )
     endtry
 endfunction
 "command! -bar -nargs=1 -complete=file CloneAs file <args> | call setbufvar('#', '&buflisted', 1)
-"command! -bar -nargs=1 -complete=file SplitAs CloneAs <args> | sbuffer # | wincmd p
-command! -bar -range=% -nargs=1 -complete=file CloneAs call <SID>CloneAs(<q-args>, 0, <line1>, <line2>)
-command! -bar -range=% -nargs=1 -complete=file SplitAs call <SID>CloneAs(<q-args>, 1, <line1>, <line2>)
+"command! -bar -nargs=1 -complete=file SCloneAs CloneAs <args> | sbuffer # | wincmd p
+command! -bar -range=% -nargs=1 -complete=file CloneAs  call <SID>CloneAs(<q-args>, 0, <line1>, <line2>)
+command! -bar -range=% -nargs=1 -complete=file SCloneAs call <SID>CloneAs(<q-args>, 1, <line1>, <line2>)
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
