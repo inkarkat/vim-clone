@@ -3,12 +3,13 @@
 " DEPENDENCIES:
 "   - escapings.vim autoload script. 
 "
-" Copyright: (C) 2011 Ingo Karkat
+" Copyright: (C) 2011-2012 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'. 
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	006	23-Jan-2012	The cloned buffer should always be editable. 
 "	005	17-Nov-2011	Rename :SplitAs to :SCloneAs. 
 "	004	08-Nov-2011	file creation from ingocommands.vim. 
 "	001	01-Oct-2011	Initial implementation. 
@@ -66,8 +67,15 @@ function! s:CloneAs( filespec, isSplit, startLine, endLine )
 	    let l:contents = getline(1, '$')
 	endif
 
+	" Cloning is done via :file {name}: "If the buffer did have a name, that
+	" name becomes the alternate-file name. An unlisted buffer is created to
+	" hold the old name." 
 	execute 'file' escapings#fnameescape(a:filespec)
+	" Re-list the buffer to hold the old name. 
 	call setbufvar('#', '&buflisted', 1)
+	" The clone should always be editable, so do not inherit those buffer
+	" settings. 
+	setlocal noreadonly modifiable
 
 	if a:isSplit
 	    sbuffer #
