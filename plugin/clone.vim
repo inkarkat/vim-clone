@@ -9,6 +9,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	007	10-Feb-2012	Add g:clone_splitmode configuration variable. 
 "	006	23-Jan-2012	The cloned buffer should always be editable. 
 "	005	17-Nov-2011	Rename :SplitAs to :SCloneAs. 
 "	004	08-Nov-2011	file creation from ingocommands.vim. 
@@ -20,6 +21,13 @@ if exists('g:loaded_clone') || (v:version < 700)
     finish
 endif
 let g:loaded_clone = 1
+
+if ! exists('g:clone_splitmode')
+    " Because of the split semantics, the mode needs to be the opposite of the
+    " 'splitbelow' setting. 
+    let g:clone_splitmode = (&splitbelow ? 'aboveleft' : 'belowright')
+endif
+
 
 ":[range]CloneAs	Duplicate and edit the current buffer / specified lines
 "			with a new name, keep the existing one. 
@@ -78,7 +86,7 @@ function! s:CloneAs( filespec, isSplit, startLine, endLine )
 	setlocal noreadonly modifiable
 
 	if a:isSplit
-	    sbuffer #
+	    execute g:clone_splitmode 'sbuffer #'
 	    call s:UpdateBuffer(1, l:bufname, l:contents, l:filetype)
 	    wincmd p
 	else
