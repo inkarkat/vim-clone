@@ -1,7 +1,7 @@
 " clone.vim: Create a duplicate clone of the current buffer.
 "
 " DEPENDENCIES:
-"   - escapings.vim autoload script.
+"   - ingo/compat.vim autoload script
 "   - ingo/err.vim autoload script
 "
 " Copyright: (C) 2011-2013 Ingo Karkat
@@ -10,6 +10,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"	008	08-Aug-2013	Move escapings.vim into ingo-library.
 "	007	14-Jun-2013	Abort on error through ingo/err.vim.
 "	007	10-Feb-2012	Add g:clone_splitmode configuration variable.
 "	006	23-Jan-2012	The cloned buffer should always be editable.
@@ -80,7 +81,7 @@ function! s:CloneAs( filespec, isSplit, startLine, endLine )
 	" Cloning is done via :file {name}: "If the buffer did have a name, that
 	" name becomes the alternate-file name. An unlisted buffer is created to
 	" hold the old name."
-	execute 'file' escapings#fnameescape(a:filespec)
+	execute 'file' ingo#compat#fnameescape(a:filespec)
 	" Re-list the buffer to hold the old name.
 	call setbufvar('#', '&buflisted', 1)
 	" The clone should always be editable, so do not inherit those buffer
