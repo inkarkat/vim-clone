@@ -46,15 +46,23 @@ endif
 function! s:CloneAs( filespec, isSplit, startLnum, endLnum )
     try
 	let l:filetype = &l:filetype
+	let l:fileformat = &l:fileformat
+	let l:fileencoding = &l:fileencoding
 
 	let l:contents = getline(a:startLnum, a:endLnum)
 
-	execute (a:isSplit ? g:clone_splitmode . ' split' : 'edit') ingo#compat#fnameescape(a:filespec)
+	if filereadable(a:filespec)
+	    " We don't want to read the original file from disk, but rather
+	    " create a new empty buffer with the same name.
+	    silent execute (a:isSplit ? g:clone_splitmode . ' new' : 'enew')
+	    execute 'file' ingo#compat#fnameescape(a:filespec)
+	else
+	    execute (a:isSplit ? g:clone_splitmode . ' split' : 'edit') ingo#compat#fnameescape(a:filespec)
+	endif
 	call setline(1, l:contents)
 
-	" Filetype detection will run on the new buffer containing the original
-	" file, but may not succeed before the file contents have been restored.
-	" Therefore, re-apply the original filetype, too.
+	let &l:fileformat = l:fileformat
+	let &l:fileencoding = l:fileencoding
 	if ! empty(l:filetype)
 	    let &l:filetype = l:filetype
 	endif
