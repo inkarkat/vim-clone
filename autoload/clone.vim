@@ -12,6 +12,11 @@
 " REVISION	DATE		REMARKS
 "   1.00.011	17-Mar-2014	Handle automatic template insertion in the new
 "				cloned buffer.
+"				Check for existing buffer name and return error
+"				in that case. This avoids the inconsistency that
+"				the :file command causes an E95 whereas the
+"				:edit / :split grabs and silently overrides the
+"				existing buffer.
 "	010	15-Mar-2014	Split off autoload script and documentation.
 "				Apply 'fileformat' and 'fileencoding' before
 "				pasting the buffer contents.
@@ -34,6 +39,11 @@
 "				file creation
 
 function! clone#CloneAs( filespec, isSplit, startLnum, endLnum )
+    if bufexists(a:filespec)
+	call ingo#err#Set('Buffer with this name already exists')
+	return 0
+    endif
+
     try
 	let l:filetype = &l:filetype
 	let l:fileformat = &l:fileformat
@@ -51,6 +61,9 @@ function! clone#CloneAs( filespec, isSplit, startLnum, endLnum )
 
 	    silent execute (a:isSplit ? g:clone_splitmode . ' new' : 'enew')
 	    execute 'file' ingo#compat#fnameescape(fnamemodify(l:absoluteFilespec, ':~:.'))
+	    " Note: If the :file command failed, this would leave behind an
+	    " unnamed buffer. But our initial bufexists() check should prevent
+	    " any failures.
 	else
 	    execute (a:isSplit ? g:clone_splitmode . ' split' : 'edit') ingo#compat#fnameescape(a:filespec)
 	endif
