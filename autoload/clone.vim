@@ -10,6 +10,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.00.011	17-Mar-2014	Handle automatic template insertion in the new
+"				cloned buffer.
 "	010	15-Mar-2014	Split off autoload script and documentation.
 "				Apply 'fileformat' and 'fileencoding' before
 "				pasting the buffer contents.
@@ -51,6 +53,12 @@ function! clone#CloneAs( filespec, isSplit, startLnum, endLnum )
 	    execute 'file' ingo#compat#fnameescape(fnamemodify(l:absoluteFilespec, ':~:.'))
 	else
 	    execute (a:isSplit ? g:clone_splitmode . ' split' : 'edit') ingo#compat#fnameescape(a:filespec)
+	endif
+
+	if ! ingo#buffer#IsEmpty()
+	    " A template system (:autocmd BufNewFile) may have seeded the new
+	    " buffer with contents; we don't want those.
+	    silent %delete _
 	endif
 
 	let &l:fileformat = l:fileformat
