@@ -1,0 +1,100 @@
+*clone.txt*             Create a duplicate clone of the current buffer.
+
+			   CLONE    by Ingo Karkat
+								   *clone.vim*
+description			|clone-description|
+usage				|clone-usage|
+installation			|clone-installation|
+configuration			|clone-configuration|
+limitations			|clone-limitations|
+known problems			|clone-known-problems|
+todo				|clone-todo|
+history				|clone-history|
+
+==============================================================================
+DESCRIPTION						   *clone-description*
+
+Often, it is efficient to base a new file (e.g. unit test, meeting minutes) on
+an existing one, and just apply the changes instead of re-creating the entire
+file. In Vim, one can create a duplicate copy of the current buffer via
+|:write| {newfile} or |:saveas| {newfile}. But the former doesn't
+automatically open the cloned file, whereas with the latter you're losing the
+buffer containing the original file. Also, the identical clone is immediately
+persisted, which may confuse automated build tools (or yourself, should you
+get interrupted and forget to make the actual modifications). Transferring the
+buffer contents via |:yank| is also cumbersome and clobbers a register.
+
+This plugin offers a |:CloneAs| command that duplicates the current buffer (or
+only parts of it) without persisting it, and keeping the original buffer
+loaded and unmodified inside Vim (with |:SCloneAs|, it'll even be kept
+displayed in a window).
+
+Oftentimes, duplication in source code is a code smell. Please use this plugin
+responsibly ;-)
+
+SEE ALSO								     *
+(Plugins offering complementary functionality, or plugins using this library.)
+
+==============================================================================
+USAGE								 *clone-usage*
+							*:CloneAs* *:SCloneAs*
+:[range]CloneAs {file}	Duplicate and edit the current buffer / specified
+			lines with a new name, keep the existing one.
+:[range]SCloneAs {file}	Duplicate and split the current buffer / specified
+			lines with a new name, keep the existing one.
+
+			The original cursor position / window view will be
+			kept, as well as the 'fileformat', 'fileencoding' and
+			'filetype' settings of the original buffer.
+
+==============================================================================
+INSTALLATION						  *clone-installation*
+
+This script is packaged as a |vimball|. If you have the "gunzip" decompressor
+in your PATH, simply edit the *.vmb.gz package in Vim; otherwise, decompress
+the archive first, e.g. using WinZip. Inside Vim, install by sourcing the
+vimball or via the |:UseVimball| command. >
+    vim clone*.vmb.gz
+    :so %
+To uninstall, use the |:RmVimball| command.
+
+DEPENDENCIES						  *clone-dependencies*
+
+- Requires Vim 7.0 or higher.
+- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.017 or
+  higher.
+
+==============================================================================
+CONFIGURATION						 *clone-configuration*
+
+For a permanent configuration, put the following commands into your |vimrc|:
+			*g:clone_splitmode*
+The |:SCloneAs| command uses the default 'splitbelow' behavior; you can
+influence this via: >
+    let g:clone_splitmode = 'belowright'
+<
+==============================================================================
+LIMITATIONS						   *clone-limitations*
+
+KNOWN PROBLEMS						*clone-known-problems*
+
+TODO								  *clone-todo*
+
+IDEAS								 *clone-ideas*
+
+==============================================================================
+HISTORY							       *clone-history*
+
+GOAL
+First published version.
+
+0.01	11-Oct-2011
+Started development.
+
+==============================================================================
+Copyright: (C) 2011-2014 Ingo Karkat
+The VIM LICENSE applies to this plugin; see |copyright|.
+
+Maintainer:	Ingo Karkat <ingo@karkat.de>
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:
