@@ -17,6 +17,8 @@
 "				the :file command causes an E95 whereas the
 "				:edit / :split grabs and silently overrides the
 "				existing buffer.
+"				Also clone the original cursor position / window
+"				view.
 "	010	15-Mar-2014	Split off autoload script and documentation.
 "				Apply 'fileformat' and 'fileencoding' before
 "				pasting the buffer contents.
@@ -48,6 +50,8 @@ function! clone#CloneAs( filespec, isSplit, startLnum, endLnum )
 	let l:filetype = &l:filetype
 	let l:fileformat = &l:fileformat
 	let l:fileencoding = &l:fileencoding
+	let l:isEntireBuffer = (a:startLnum == 1 && a:endLnum == line('$'))
+	let l:view = winsaveview()
 
 	let l:contents = getline(a:startLnum, a:endLnum)
 
@@ -82,6 +86,12 @@ function! clone#CloneAs( filespec, isSplit, startLnum, endLnum )
 	if ! empty(l:filetype)
 	    let &l:filetype = l:filetype
 	endif
+
+	if ! l:isEntireBuffer
+	    let l:view.lnum -= a:startLnum - 1
+	    let l:view.topline -= a:startLnum - 1
+	endif
+	silent! call winrestview(l:view)
 
 	return 1
     catch /^Vim\%((\a\+)\)\=:E/
