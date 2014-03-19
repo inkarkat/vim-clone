@@ -18,22 +18,24 @@ Often, it is efficient to base a new file (e.g. unit test, meeting minutes) on
 an existing one, and just apply the changes instead of re-creating the entire
 file. In Vim, one can create a duplicate copy of the current buffer via
 |:write| {newfile} or |:saveas| {newfile}. But the former doesn't
-automatically open the cloned file, whereas with the latter you're losing the
+automatically open the cloned file, whereas with the latter, you're losing the
 buffer containing the original file. Also, the identical clone is immediately
 persisted, which may confuse automated build tools (or yourself, should you
 get interrupted and forget to make the actual modifications). Transferring the
 buffer contents via |:yank| is also cumbersome and clobbers a register.
 
 This plugin offers a |:CloneAs| command that duplicates the current buffer (or
-only parts of it) without persisting it, and keeping the original buffer
-loaded and unmodified inside Vim (with |:SCloneAs|, it'll even be kept
-displayed in a window).
+only parts of it) without persisting the clone right away (only on |:w|), and
+keeping the original buffer loaded and unmodified inside Vim (with
+|:SCloneAs|, it'll even be kept displayed in a window).
 
 Oftentimes, duplication in source code is a code smell. Please use this plugin
 responsibly ;-)
 
 SEE ALSO								     *
-(Plugins offering complementary functionality, or plugins using this library.)
+
+The |cloneSimilar.vim| plugin (vimscript #4897) adds additional command
+variants powered by the |EditSimilar.vim| (vimscript #2544) plugin.
 
 ==============================================================================
 USAGE								 *clone-usage*
@@ -68,7 +70,7 @@ DEPENDENCIES						  *clone-dependencies*
 CONFIGURATION						 *clone-configuration*
 
 For a permanent configuration, put the following commands into your |vimrc|:
-			*g:clone_splitmode*
+							   *g:clone_splitmode*
 The |:SCloneAs| command uses the default 'splitbelow' behavior; you can
 influence this via: >
     let g:clone_splitmode = 'belowright'
@@ -85,7 +87,7 @@ IDEAS								 *clone-ideas*
 ==============================================================================
 HISTORY							       *clone-history*
 
-GOAL
+1.00	18-Mar-2014
 First published version.
 
 0.01	11-Oct-2011
