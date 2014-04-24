@@ -10,6 +10,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.01.012	20-Mar-2014	Allow cloning into unloaded buffer.
 "   1.00.011	17-Mar-2014	Handle automatic template insertion in the new
 "				cloned buffer.
 "				Check for existing buffer name and return error
@@ -41,7 +42,7 @@
 "				file creation
 
 function! clone#CloneAs( filespec, isSplit, startLnum, endLnum )
-    if bufexists(a:filespec)
+    if bufexists(a:filespec) && bufloaded(a:filespec)
 	call ingo#err#Set('Buffer with this name already exists')
 	return 0
     endif
