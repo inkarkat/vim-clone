@@ -87,6 +87,9 @@ IDEAS								 *clone-ideas*
 ==============================================================================
 HISTORY							       *clone-history*
 
+1.01	RELEASEME
+- Allow cloning into unloaded buffer.
+
 1.00	18-Mar-2014
 First published version.
 
