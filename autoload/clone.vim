@@ -102,7 +102,7 @@ function! clone#CloneAs( filespec, isSplit, startLnum, endLnum )
 	endif
 
 	return 1
-    catch /^Vim\%((\a\+)\)\=:E/
+    catch /^Vim\%((\a\+)\)\=:/
 	call ingo#err#SetVimException()
 	return 0
     finally
