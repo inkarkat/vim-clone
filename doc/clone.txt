@@ -87,8 +87,10 @@ IDEAS								 *clone-ideas*
 ==============================================================================
 HISTORY							       *clone-history*
 
-1.01	RELEASEME
+1.01	25-Apr-2014
 - Allow cloning into unloaded buffer.
+- Suppress BufNewFile event, and instead emit the more appropriate BufRead
+  event for the clone buffer.
 
 1.00	18-Mar-2014
 First published version.
