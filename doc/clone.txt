@@ -87,12 +87,12 @@ IDEAS								 *clone-ideas*
 ==============================================================================
 HISTORY							       *clone-history*
 
-1.02	RELEASEME
+1.02	19-Jun-2014
 - Avoid setting 'filetype' when it already has the value of the original
   buffer, because even that triggers FileType autocmds, and may result in
   disturbing duplicate messages.
 - Also handle unreadable files (and directories).
-*** You need to update to ingo-library (vimscript #4433) version 1.019! ***
+  *** You need to update to ingo-library (vimscript #4433) version 1.019! ***
 
 1.01	25-Apr-2014
 - Allow cloning into unloaded buffer.
