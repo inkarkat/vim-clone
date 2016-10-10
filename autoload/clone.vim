@@ -5,12 +5,13 @@
 "   - ingo/err.vim autoload script
 "   - ingo/fs/path.vim autoload script
 "
-" Copyright: (C) 2011-2014 Ingo Karkat
+" Copyright: (C) 2011-2016 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.03.016	15-Jul-2016	ENH: Also emit custom User BufCloneFile event.
 "   1.02.015	23-May-2014	Also handle unreadable files (and directories).
 "   1.02.014	07-May-2014	Avoid setting 'filetype' when it already has the
 "				value of the original buffer, because even that
@@ -101,6 +102,7 @@ function! clone#CloneAs( filespec, isSplit, startLnum, endLnum )
 	endif
 	silent! call winrestview(l:view)
 
+	silent doautocmd User BufCloneFile
 	doautocmd BufRead
 
 	if ! empty(l:filetype) && &l:filetype !=# l:filetype
