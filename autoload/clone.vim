@@ -11,6 +11,9 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.03.017	11-Oct-2016	Trigger BufCloneFile after BufRead; else, the
+"				BufRead will immediately undo the definition of
+"				b:nofile done by my NofileDetect customizations.
 "   1.03.016	15-Jul-2016	ENH: Also emit custom User BufCloneFile event.
 "   1.02.015	23-May-2014	Also handle unreadable files (and directories).
 "   1.02.014	07-May-2014	Avoid setting 'filetype' when it already has the
@@ -102,8 +105,8 @@ function! clone#CloneAs( filespec, isSplit, startLnum, endLnum )
 	endif
 	silent! call winrestview(l:view)
 
-	silent doautocmd User BufCloneFile
 	doautocmd BufRead
+	silent doautocmd User BufCloneFile
 
 	if ! empty(l:filetype) && &l:filetype !=# l:filetype
 	    let &l:filetype = l:filetype
