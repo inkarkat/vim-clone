@@ -4,13 +4,15 @@
 "   - ingo/compat.vim autoload script
 "   - ingo/err.vim autoload script
 "   - ingo/fs/path.vim autoload script
+"   - ingo/range.vim autoload script
 "
-" Copyright: (C) 2011-2016 Ingo Karkat
+" Copyright: (C) 2011-2017 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.03.018	08-Nov-2017	Use ingo#range#IsEntireBuffer().
 "   1.03.017	11-Oct-2016	Trigger BufCloneFile after BufRead; else, the
 "				BufRead will immediately undo the definition of
 "				b:nofile done by my NofileDetect customizations.
@@ -66,7 +68,7 @@ function! clone#CloneAs( filespec, isSplit, startLnum, endLnum )
 	let l:filetype = &l:filetype
 	let l:fileformat = &l:fileformat
 	let l:fileencoding = &l:fileencoding
-	let l:isEntireBuffer = (a:startLnum == 1 && a:endLnum == line('$'))
+	let l:isEntireBuffer = ingo#range#IsEntireBuffer(a:startLnum, a:endLnum)
 	let l:view = winsaveview()
 
 	let l:contents = getline(a:startLnum, a:endLnum)
