@@ -40,9 +40,12 @@ variants powered by the |EditSimilar.vim| (vimscript #2544) plugin.
 ==============================================================================
 USAGE								 *clone-usage*
 							*:CloneAs* *:SCloneAs*
-:[range]CloneAs {file}	Duplicate and edit the current buffer / specified
+:[range]CloneAs[!] {file}
+			Duplicate and edit the current buffer / specified
 			lines with a new name, keep the existing one.
-:[range]SCloneAs {file}	Duplicate and split the current buffer / specified
+			Writes over existing buffer with [!].
+:[range]SCloneAs[!] {file}
+			Duplicate and split the current buffer / specified
 			lines with a new name, keep the existing one.
 
 			The original cursor position / window view will be
@@ -87,9 +90,10 @@ IDEAS								 *clone-ideas*
 ==============================================================================
 HISTORY							       *clone-history*
 
-1.03	RELEASEME
+1.10	RELEASEME
 - ENH: Also emit custom User BufCloneFile event.
-*** You need to update to ingo-library (vimscript #4433) version 1.033! ***
+  *** You need to update to ingo-library (vimscript #4433) version 1.033! ***
+- ENH: Support [!] to overwrite an existing target buffer.
 
 1.02	19-Jun-2014
 - Avoid setting 'filetype' when it already has the value of the original
