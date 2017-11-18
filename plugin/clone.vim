@@ -4,12 +4,13 @@
 "   - clone.vim autoload script
 "   - ingo/err.vim autoload script
 "
-" Copyright: (C) 2011-2014 Ingo Karkat
+" Copyright: (C) 2011-2017 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.10.011	19-Nov-2017	ENH: Add [!] to overwrite existing buffer.
 "   1.00.010	15-Mar-2014	Split off autoload script and documentation.
 "				New implementation doesn't need reversal of
 "				'splitbelow'.
@@ -44,7 +45,7 @@ endif
 
 "- commands --------------------------------------------------------------------
 
-command! -bar -range=% -nargs=1 -complete=file CloneAs  if ! clone#CloneAs(<q-args>, 0, <line1>, <line2>) | echoerr ingo#err#Get() | endif
-command! -bar -range=% -nargs=1 -complete=file SCloneAs if ! clone#CloneAs(<q-args>, 1, <line1>, <line2>) | echoerr ingo#err#Get() | endif
+command! -bar -bang -range=% -nargs=1 -complete=file CloneAs  if ! clone#CloneAs(<bang>0, <q-args>, 0, <line1>, <line2>) | echoerr ingo#err#Get() | endif
+command! -bar -bang -range=% -nargs=1 -complete=file SCloneAs if ! clone#CloneAs(<bang>0, <q-args>, 1, <line1>, <line2>) | echoerr ingo#err#Get() | endif
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
