@@ -1,7 +1,7 @@
 " clone.vim: Create a duplicate clone of the current buffer.
 "
 " DEPENDENCIES:
-"   - ingo/compat.vim autoload script
+"   - clone.vim autoload script
 "   - ingo/err.vim autoload script
 "
 " Copyright: (C) 2011-2014 Ingo Karkat
@@ -10,6 +10,9 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.00.010	15-Mar-2014	Split off autoload script and documentation.
+"				New implementation doesn't need reversal of
+"				'splitbelow'.
 "	009	14-Mar-2014	Complete reimplementation without using :file.
 "				This is way simpler (no workarounds for
 "				unpersisted changes) and doesn't have the
@@ -32,48 +35,16 @@ if exists('g:loaded_clone') || (v:version < 700)
 endif
 let g:loaded_clone = 1
 
+"- configuration ---------------------------------------------------------------
+
 if ! exists('g:clone_splitmode')
-    " Because of the split semantics, the mode needs to be the opposite of the
-    " 'splitbelow' setting.
-    let g:clone_splitmode = (&splitbelow ? 'aboveleft' : 'belowright')
+    let g:clone_splitmode = (&splitbelow ? 'belowright' : 'aboveleft')
 endif
 
 
-":[range]CloneAs	Duplicate and edit the current buffer / specified lines
-"			with a new name, keep the existing one.
-":[range]SCloneAs	Duplicate and split the current buffer / specified lines
-"			with a new name, keep the existing one.
-function! s:CloneAs( filespec, isSplit, startLnum, endLnum )
-    try
-	let l:filetype = &l:filetype
-	let l:fileformat = &l:fileformat
-	let l:fileencoding = &l:fileencoding
+"- commands --------------------------------------------------------------------
 
-	let l:contents = getline(a:startLnum, a:endLnum)
-
-	if filereadable(a:filespec)
-	    " We don't want to read the original file from disk, but rather
-	    " create a new empty buffer with the same name.
-	    silent execute (a:isSplit ? g:clone_splitmode . ' new' : 'enew')
-	    execute 'file' ingo#compat#fnameescape(a:filespec)
-	else
-	    execute (a:isSplit ? g:clone_splitmode . ' split' : 'edit') ingo#compat#fnameescape(a:filespec)
-	endif
-	call setline(1, l:contents)
-
-	let &l:fileformat = l:fileformat
-	let &l:fileencoding = l:fileencoding
-	if ! empty(l:filetype)
-	    let &l:filetype = l:filetype
-	endif
-
-	return 1
-    catch /^Vim\%((\a\+)\)\=:E/
-	call ingo#err#SetVimException()
-	return 0
-    endtry
-endfunction
-command! -bar -range=% -nargs=1 -complete=file CloneAs  if ! <SID>CloneAs(<q-args>, 0, <line1>, <line2>) | echoerr ingo#err#Get() | endif
-command! -bar -range=% -nargs=1 -complete=file SCloneAs if ! <SID>CloneAs(<q-args>, 1, <line1>, <line2>) | echoerr ingo#err#Get() | endif
+command! -bar -range=% -nargs=1 -complete=file CloneAs  if ! clone#CloneAs(<q-args>, 0, <line1>, <line2>) | echoerr ingo#err#Get() | endif
+command! -bar -range=% -nargs=1 -complete=file SCloneAs if ! clone#CloneAs(<q-args>, 1, <line1>, <line2>) | echoerr ingo#err#Get() | endif
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
