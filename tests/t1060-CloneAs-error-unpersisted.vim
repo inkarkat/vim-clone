@@ -5,12 +5,7 @@ split ++enc=utf-16le text.txt
 
 call vimtest#StartTap()
 call vimtap#Plan(3)
-try
-    CloneAs unpersisted.txt
-    call vimtap#Fail('expected exception')
-catch
-    call vimtap#err#Thrown('Buffer with this name already exists', 'exception thrown')
-endtry
+call vimtap#err#Errors('Buffer with this name already exists', 'CloneAs unpersisted.txt', 'exception thrown')
 
 
 call vimtap#Is(bufname(''), 'text.txt', 'Original is edited')
