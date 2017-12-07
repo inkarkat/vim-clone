@@ -12,6 +12,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.10.019	19-Nov-2017	ENH: Add a:isForce flag to clone#CloneAs() and
+"				handle existing buffer.
 "   1.03.018	08-Nov-2017	Use ingo#range#IsEntireBuffer().
 "   1.03.017	11-Oct-2016	Trigger BufCloneFile after BufRead; else, the
 "				BufRead will immediately undo the definition of
@@ -56,10 +58,16 @@
 "	001	01-Oct-2011	Initial implementation.
 "				file creation
 
-function! clone#CloneAs( filespec, isSplit, startLnum, endLnum )
+function! clone#CloneAs( isForce, filespec, isSplit, startLnum, endLnum )
     if bufexists(a:filespec) && bufloaded(a:filespec)
-	call ingo#err#Set('Buffer with this name already exists')
-	return 0
+	let l:bufNr = bufnr(a:filespec)
+	if l:bufNr == bufnr('')
+	    call ingo#err#Set('Cannot clone buffer onto itself')
+	    return 0
+	elseif ! a:isForce
+	    call ingo#err#Set('Buffer with this name already exists (add ! to override)')
+	    return 0
+	endif
     endif
 
     let l:save_eventignore = &eventignore
@@ -73,7 +81,10 @@ function! clone#CloneAs( filespec, isSplit, startLnum, endLnum )
 
 	let l:contents = getline(a:startLnum, a:endLnum)
 
-	if ingo#fs#path#Exists(a:filespec)
+
+	if exists('l:bufNr')
+	    execute (a:isSplit ? g:clone_splitmode . ' ' . l:bufNr . 'sbuffer' : l:bufNr . 'buffer')
+	elseif ingo#fs#path#Exists(a:filespec)
 	    " We don't want to read the original file from disk, but rather
 	    " create a new empty buffer with the same name.
 
@@ -92,7 +103,8 @@ function! clone#CloneAs( filespec, isSplit, startLnum, endLnum )
 
 	if ! ingo#buffer#IsEmpty()
 	    " A template system (:autocmd BufNewFile) may have seeded the new
-	    " buffer with contents; we don't want those.
+	    " buffer with contents; we don't want those. Or this was an existing
+	    " buffer.
 	    silent %delete _
 	endif
 
