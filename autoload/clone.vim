@@ -1,8 +1,10 @@
 " clone.vim: Create a duplicate clone of the current buffer.
 "
 " DEPENDENCIES:
+"   - ingo/buffer.vim autoload script
 "   - ingo/compat.vim autoload script
 "   - ingo/err.vim autoload script
+"   - ingo/event.vim autoload script
 "   - ingo/fs/path.vim autoload script
 "   - ingo/range.vim autoload script
 "
@@ -12,6 +14,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.10.020	08-Dec-2017	Replace :doautocmd with ingo#event#Trigger().
 "   1.10.019	19-Nov-2017	ENH: Add a:isForce flag to clone#CloneAs() and
 "				handle existing buffer.
 "   1.03.018	08-Nov-2017	Use ingo#range#IsEntireBuffer().
@@ -120,7 +123,7 @@ function! clone#CloneAs( isForce, filespec, isSplit, startLnum, endLnum )
 	silent! call winrestview(l:view)
 
 	doautocmd BufRead
-	silent doautocmd User BufCloneFile
+	call ingo#event#TriggerCustom('BufCloneFile')
 
 	if ! empty(l:filetype) && &l:filetype !=# l:filetype
 	    let &l:filetype = l:filetype
